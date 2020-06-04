@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Michal Stolarczyk &amp; Nathan Sheffield" />
+
+<meta name="date" content="2020-06-03" />
+
+<title>Subsample table in pepr</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Subsample table in pepr</h1>
+<h4 class="author">Michal Stolarczyk &amp; Nathan Sheffield</h4>
+<h4 class="date">2020-06-03</h4>
+
+
+
+<div id="learn-sample-subannotations-in-pepr" class="section level1">
+<h1>Learn sample subannotations in <code>pepr</code></h1>
+<p>This vignette will show you how and why to use the subsample table functionality of the <code>pepr</code> package.</p>
+<ul>
+<li><p>basic information about the PEP concept visit the <a href="http://pep.databio.org/en/2.0.0/">project website</a>.</p></li>
+<li><p>broader theoretical description in the subsample table <a href="http://pep.databio.org/en/2.0.0/specification/#project-attribute-subsample_table">documentation section</a>.</p></li>
+</ul>
+<div id="problemgoal" class="section level2">
+<h2>Problem/Goal</h2>
+<p>This series of examples below demonstrates how and why to use sample subannoatation functionality in multiple cases to <strong>provide multiple input files of the same type for a single sample</strong>.</p>
+</div>
+<div id="solutions" class="section level2">
+<h2>Solutions</h2>
+<div id="example-1-basic-sample-subannotation-table" class="section level3">
+<h3>Example 1: basic sample subannotation table</h3>
+<p>This example demonstrates how the sample subannotation functionality is used. In this example, 2 samples have multiple input files that need merging (<code>frog_1</code> and <code>frog_2</code>), while 1 sample (<code>frog_3</code>) does not. Therefore, <code>frog_3</code> specifies its file in the <code>sample_table.csv</code> file, while the others leave that field blank and instead specify several files in the <code>subsample_table.csv</code> file.</p>
+<p>This example is made up of these components:</p>
+<ul>
+<li>Project config file:</li>
+</ul>
+<pre><code>   pep_version: 2.0.0
+   sample_table: sample_table.csv
+   subsample_table: subsample_table.csv
+   output_dir: $HOME/example_results</code></pre>
+<ul>
+<li>Sample table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+protocol
+</th>
+<th style="text-align:left;">
+file
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+multi
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+multi
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_3
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+multi
+</td>
+</tr>
+</tbody>
+</table></li>
+<li>Subsample table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+subsample_name
+</th>
+<th style="text-align:left;">
+file
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+sub_a
+</td>
+<td style="text-align:left;">
+data/frog1a_data.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+sub_b
+</td>
+<td style="text-align:left;">
+data/frog1b_data.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+sub_c
+</td>
+<td style="text-align:left;">
+data/frog1c_data.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+sub_a
+</td>
+<td style="text-align:left;">
+data/frog2a_data.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+sub_b
+</td>
+<td style="text-align:left;">
+data/frog2b_data.txt
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<p>Let’s create the Project object and see if multiple files are present</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">projectConfig1 =<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">&quot;example_subtable1&quot;</span>,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">p1 =<span class="st"> </span><span class="kw">Project</span>(projectConfig1)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable1/project_config.yaml</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># Check the files</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">p1Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p1)</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">p1Samples<span class="op">$</span>file</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; [1] &quot;data/frog1a_data.txt&quot; &quot;data/frog1b_data.txt&quot; &quot;data/frog1c_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; [1] &quot;data/frog2a_data.txt&quot; &quot;data/frog2b_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; [1] &quot;multi&quot;</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co"># Check the subsample names</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">p1Samples<span class="op">$</span>subsample_name</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot; &quot;sub_c&quot;</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot;</span></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt; NULL</span></a></code></pre></div>
+<p>And inspect the whole table in <code>p1@samples</code> slot</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sample_name</th>
+<th align="left">protocol</th>
+<th align="left">file</th>
+<th align="left">subsample_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">frog_1</td>
+<td align="left">anySampleType</td>
+<td align="left">c(“data/frog1a_data.txt”, “data/frog1b_data.txt”, “data/frog1c_data.txt”)</td>
+<td align="left">c(“sub_a”, “sub_b”, “sub_c”)</td>
+</tr>
+<tr class="even">
+<td align="left">frog_2</td>
+<td align="left">anySampleType</td>
+<td align="left">c(“data/frog2a_data.txt”, “data/frog2b_data.txt”)</td>
+<td align="left">c(“sub_a”, “sub_b”)</td>
+</tr>
+<tr class="odd">
+<td align="left">frog_3</td>
+<td align="left">anySampleType</td>
+<td align="left">multi</td>
+<td align="left">NULL</td>
+</tr>
+</tbody>
+</table>
+<p>You can also access a single subsample if you call the <code>getSubsample</code> method with appropriate <code>sample_name</code> - <code>subsample_name</code> attribute combination. Note, that this is only possible if the <code>subsample_name</code> column is defined in the <code>sub_annotation.csv</code> file.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">sampleName =<span class="st"> &quot;frog_1&quot;</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">subsampleName =<span class="st"> &quot;sub_a&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">getSubsample</span>(p1, sampleName, subsampleName)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;    sample_name      protocol                 file subsample_name</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 1:      frog_1 anySampleType data/frog1a_data.txt          sub_a</span></a></code></pre></div>
+</div>
+<div id="example-2-subannotations-and-derived-attributes" class="section level3">
+<h3>Example 2: subannotations and derived attributes</h3>
+<p>This example uses a <code>subsample_table.csv</code> file and a derived attributes to point to files. This is a rather complex example. Notice we must include the <code>file_id</code> column in the <code>sample_table.csv</code> file, and leave it blank; this is then populated by just some of the samples (<code>frog_1</code> and <code>frog_2</code>) in the <code>subsample_table.csv</code>, but is left empty for the samples that are not merged.</p>
+<p>This example is made up of these components:</p>
+<ul>
+<li>Project config file:</li>
+</ul>
+<pre><code>  Warning in readLines(file): incomplete final line found on '/private/var/
+  folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/
+  extdata/example_peps-master/example_subtable2/project_config.yaml'
+   pep_version: 2.0.0
+   sample_table: sample_table.csv
+   subsample_table: subsample_table.csv
+   output_dir: $HOME/hello_looper_results
+   pipeline_interfaces: ../pipeline/pipeline_interface.yaml
+   sample_modifiers:
+      derive:
+          attributes: file
+          sources:
+              local_files: ../data/{identifier}{file_id}_data.txt
+              local_files_unmerged: ../data/{identifier}_data.txt</code></pre>
+<ul>
+<li>Sample annotation table:</li>
+</ul>
+<pre><code>#&gt; Warning in read.table(sampleAnnotation, sep = &quot;,&quot;, header = T): incomplete
+#&gt; final line found by readTableHeader on '/private/var/folders/3f/
+#&gt; 0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/
+#&gt; example_peps-master/example_subtable2/sample_table.csv'</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+protocol
+</th>
+<th style="text-align:left;">
+identifier
+</th>
+<th style="text-align:left;">
+file
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog1
+</td>
+<td style="text-align:left;">
+local_files
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog2
+</td>
+<td style="text-align:left;">
+local_files
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_3
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog3
+</td>
+<td style="text-align:left;">
+local_files_unmerged
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_4
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog4
+</td>
+<td style="text-align:left;">
+local_files_unmerged
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Sample subannotation table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+file_id
+</th>
+<th style="text-align:left;">
+subsample_name
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+a
+</td>
+<td style="text-align:left;">
+a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+b
+</td>
+<td style="text-align:left;">
+b
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+c
+</td>
+<td style="text-align:left;">
+c
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+a
+</td>
+<td style="text-align:left;">
+a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+b
+</td>
+<td style="text-align:left;">
+b
+</td>
+</tr>
+</tbody>
+</table>
+Let’s load the project config, create the Project object and see if multiple files are present</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">projectConfig2 =<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">&quot;example_subtable2&quot;</span>,</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">p2 =<span class="st"> </span><span class="kw">Project</span>(projectConfig2)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable2/project_config.yaml</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; Warning in readLines(con): incomplete final line found on '/private/var/folders/</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; 3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; example_peps-master/example_subtable2/project_config.yaml'</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; replace 1 rows</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 2 rows to</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; replace 1 rows</span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co"># Check the files</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">p2Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p2)</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">p2Samples<span class="op">$</span>file</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; [1] &quot;../data/frog2a_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co">#&gt; [1] &quot;../data/frog3_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; [1] &quot;../data/frog4_data.txt&quot;</span></a></code></pre></div>
+<p>And inspect the whole table in <code>p2@samples</code> slot</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sample_name</th>
+<th align="left">protocol</th>
+<th align="left">identifier</th>
+<th align="left">file</th>
+<th align="left">file_id</th>
+<th align="left">subsample_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">frog_1</td>
+<td align="left">anySampleType</td>
+<td align="left">frog1</td>
+<td align="left">../data/frog1a_data.txt</td>
+<td align="left">c(“a”, “b”, “c”)</td>
+<td align="left">c(“a”, “b”, “c”)</td>
+</tr>
+<tr class="even">
+<td align="left">frog_2</td>
+<td align="left">anySampleType</td>
+<td align="left">frog2</td>
+<td align="left">../data/frog2a_data.txt</td>
+<td align="left">c(“a”, “b”)</td>
+<td align="left">c(“a”, “b”)</td>
+</tr>
+<tr class="odd">
+<td align="left">frog_3</td>
+<td align="left">anySampleType</td>
+<td align="left">frog3</td>
+<td align="left">../data/frog3_data.txt</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+</tr>
+<tr class="even">
+<td align="left">frog_4</td>
+<td align="left">anySampleType</td>
+<td align="left">frog4</td>
+<td align="left">../data/frog4_data.txt</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="example-3-subannotations-and-expansion-characters" class="section level3">
+<h3>Example 3: subannotations and expansion characters</h3>
+<p>This example gives the exact same results as Example 2, but in this case, uses a wildcard for <code>frog_2</code> instead of including it in the <code>subsample_table.csv</code> file. Since we can’t use a wildcard and a subannotation for the same sample, this necessitates specifying a second data source class (<code>local_files_unmerged</code>) that uses an asterisk (<code>*</code>). The outcome is the same.</p>
+<p>This example is made up of these components:</p>
+<ul>
+<li>Project config file:</li>
+</ul>
+<pre><code>   pep_version: 2.0.0
+   sample_table: sample_table.csv
+   subsample_table: subsample_table.csv
+   output_dir: $HOME/hello_looper_results
+   pipeline_interfaces: ../pipeline/pipeline_interface.yaml
+   sample_modifiers:
+      derive:
+          attributes: file
+          sources:
+              local_files: ../data/{identifier}{file_id}_data.txt
+              local_files_unmerged: ../data/{identifier}*_data.txt</code></pre>
+<ul>
+<li>Sample annotation table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+protocol
+</th>
+<th style="text-align:left;">
+identifier
+</th>
+<th style="text-align:left;">
+file
+</th>
+<th style="text-align:left;">
+file_id
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog1
+</td>
+<td style="text-align:left;">
+local_files
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog2
+</td>
+<td style="text-align:left;">
+local_files_unmerged
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_3
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog3
+</td>
+<td style="text-align:left;">
+local_files_unmerged
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_4
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+<td style="text-align:left;">
+frog4
+</td>
+<td style="text-align:left;">
+local_files_unmerged
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table></li>
+<li>Sample subtable table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+file_id
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+a
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+b
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+c
+</td>
+</tr>
+</tbody>
+</table>
+Let’s load the project config, create the Project object and see if multiple files are present</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">projectConfig3 =<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">&quot;example_subtable3&quot;</span>,</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">p3 =<span class="st"> </span><span class="kw">Project</span>(projectConfig3)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable3/project_config.yaml</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; replace 1 rows</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># Check the files</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13">p3Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p3)</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">p3Samples<span class="op">$</span>file</a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; [1] &quot;../data/frog2*_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">#&gt; [1] &quot;../data/frog3*_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">#&gt; [1] &quot;../data/frog4*_data.txt&quot;</span></a></code></pre></div>
+<p>And inspect the whole table in <code>p3@samples</code> slot</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sample_name</th>
+<th align="left">protocol</th>
+<th align="left">identifier</th>
+<th align="left">file</th>
+<th align="left">file_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">frog_1</td>
+<td align="left">anySampleType</td>
+<td align="left">frog1</td>
+<td align="left">../data/frog1a_data.txt</td>
+<td align="left">c(“a”, “b”, “c”)</td>
+</tr>
+<tr class="even">
+<td align="left">frog_2</td>
+<td align="left">anySampleType</td>
+<td align="left">frog2</td>
+<td align="left">../data/frog2*_data.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">frog_3</td>
+<td align="left">anySampleType</td>
+<td align="left">frog3</td>
+<td align="left">../data/frog3*_data.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">frog_4</td>
+<td align="left">anySampleType</td>
+<td align="left">frog4</td>
+<td align="left">../data/frog4*_data.txt</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="example-4-subannotations-and-multiple-separate-class-inputs" class="section level3">
+<h3>Example 4: subannotations and multiple (separate-class) inputs</h3>
+<p>Merging is for same class inputs (like, multiple files for read1). Different-class inputs (like read1 vs read2) are handled by different attributes (or columns). This example shows you how to handle paired-end data, while also merging within each.</p>
+<p>This example is made up of these components:</p>
+<ul>
+<li>Project config file:</li>
+</ul>
+<pre><code>   pep_version: 2.0.0
+   sample_table: sample_table.csv
+   subsample_table: subsample_table.csv
+   output_dir: $HOME/hello_looper_results
+   pipeline_interfaces: ../pipeline/pipeline_interface.yaml</code></pre>
+<ul>
+<li>Sample annotation table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+protocol
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_2
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_3
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_4
+</td>
+<td style="text-align:left;">
+anySampleType
+</td>
+</tr>
+</tbody>
+</table></li>
+<li>Sample subannotation table:
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+sample_name
+</th>
+<th style="text-align:left;">
+read1
+</th>
+<th style="text-align:left;">
+read2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+frog1a_data.txt
+</td>
+<td style="text-align:left;">
+frog1a_data2.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+frog1b_data.txt
+</td>
+<td style="text-align:left;">
+frog1b_data2.txt
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+frog_1
+</td>
+<td style="text-align:left;">
+frog1c_data.txt
+</td>
+<td style="text-align:left;">
+frog1b_data2.txt
+</td>
+</tr>
+</tbody>
+</table>
+Let’s load the project config, create the Project object and see if multiple files are present</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">projectConfig4 =<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">&quot;example_subtable4&quot;</span>,</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">p4 =<span class="st"> </span><span class="kw">Project</span>(projectConfig4)</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable4/project_config.yaml</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co"># Check the read1 and read2 columns</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">p4Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p4)</a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">p4Samples<span class="op">$</span>read1</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; [1] &quot;frog1a_data.txt&quot; &quot;frog1b_data.txt&quot; &quot;frog1c_data.txt&quot;</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb10-24" data-line-number="24">p4Samples<span class="op">$</span>read2</a>
+<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="co">#&gt; [1] &quot;frog1a_data2.txt&quot; &quot;frog1b_data2.txt&quot; &quot;frog1b_data2.txt&quot;</span></a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb10-33" data-line-number="33"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb10-35" data-line-number="35"><span class="co">#&gt; NULL</span></a></code></pre></div>
+<p>And inspect the whole table in <code>p4@samples</code> slot</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">sample_name</th>
+<th align="left">protocol</th>
+<th align="left">read1</th>
+<th align="left">read2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">frog_1</td>
+<td align="left">anySampleType</td>
+<td align="left">c(“frog1a_data.txt”, “frog1b_data.txt”, “frog1c_data.txt”)</td>
+<td align="left">c(“frog1a_data2.txt”, “frog1b_data2.txt”, “frog1b_data2.txt”)</td>
+</tr>
+<tr class="even">
+<td align="left">frog_2</td>
+<td align="left">anySampleType</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+</tr>
+<tr class="odd">
+<td align="left">frog_3</td>
+<td align="left">anySampleType</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+</tr>
+<tr class="even">
+<td align="left">frog_4</td>
+<td align="left">anySampleType</td>
+<td align="left">NULL</td>
+<td align="left">NULL</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
