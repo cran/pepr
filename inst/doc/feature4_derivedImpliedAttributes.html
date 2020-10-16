@@ -12,7 +12,7 @@
 
 <meta name="author" content="Michal Stolarczyk" />
 
-<meta name="date" content="2020-06-03" />
+<meta name="date" content="2020-10-15" />
 
 <title>Sample modifiers in pepr: imply and derive</title>
 
@@ -20,9 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,14 +32,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +50,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -301,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Sample modifiers in pepr: imply and derive</h1>
 <h4 class="author">Michal Stolarczyk</h4>
-<h4 class="date">2020-06-03</h4>
+<h4 class="date">2020-10-15</h4>
 
 
 
@@ -504,28 +506,28 @@ source1
 <div id="code" class="section level2">
 <h2>Code</h2>
 <p>Load <code>pepr</code> and read in the project metadata by specifying the path to the <code>project_config.yaml</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(pepr)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">projectConfig =<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">&quot;example_derive_imply&quot;</span>,</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">p =<span class="st"> </span><span class="kw">Project</span>(projectConfig)</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">## Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_derive_imply/project_config.yaml</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(pepr)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>projectConfig =<span class="st"> </span><span class="kw">system.file</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="st">&quot;example_derive_imply&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>p =<span class="st"> </span><span class="kw">Project</span>(projectConfig)</span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">## Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_derive_imply/project_config.yaml</span></span></code></pre></div>
 <p>And inspect it:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">sampleTable</span>(p)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">##    sample_name organism time                                      file_path</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">## 1:      pig_0h      pig    0 /data/lab/project/pig_susScr11_untreated.fastq</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## 2:      pig_1h      pig    1   /data/lab/project/pig_susScr11_treated.fastq</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">## 3:     frog_0h     frog    0 /data/lab/project/frog_xenTro9_untreated.fastq</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">## 4:     frog_1h     frog    1   /data/lab/project/frog_xenTro9_treated.fastq</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">##      genome condition</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">## 1: susScr11 untreated</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">## 2: susScr11   treated</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## 3:  xenTro9 untreated</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">## 4:  xenTro9   treated</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">sampleTable</span>(p)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">##    sample_name organism time                                      file_path</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">## 1:      pig_0h      pig    0 /data/lab/project/pig_susScr11_untreated.fastq</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">## 2:      pig_1h      pig    1   /data/lab/project/pig_susScr11_treated.fastq</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">## 3:     frog_0h     frog    0 /data/lab/project/frog_xenTro9_untreated.fastq</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">## 4:     frog_1h     frog    1   /data/lab/project/frog_xenTro9_treated.fastq</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">##      genome condition</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">## 1: susScr11 untreated</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">## 2: susScr11   treated</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">## 3:  xenTro9 untreated</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">## 4:  xenTro9   treated</span></span></code></pre></div>
 <p>As you can see, the resulting samples are annotated the same way as if they were read from the original, unwieldy, annotations file (enriched with the <code>genome</code> and <code>condition</code> attributes that were implied).</p>
 </div>
 </div>

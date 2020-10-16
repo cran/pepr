@@ -12,7 +12,7 @@
 
 <meta name="author" content="Nathan Sheffield" />
 
-<meta name="date" content="2020-06-03" />
+<meta name="date" content="2020-10-15" />
 
 <title>Getting Started with pepr</title>
 
@@ -20,9 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,14 +32,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +50,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -301,55 +303,55 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Getting Started with pepr</h1>
 <h4 class="author">Nathan Sheffield</h4>
-<h4 class="date">2020-06-03</h4>
+<h4 class="date">2020-10-15</h4>
 
 
 
 <div id="introduction-to-pepr" class="section level1">
 <h1>Introduction to <code>pepr</code></h1>
-<p><code>pepr</code> is the official R package for the <a href="http://pepkit.github.io">pepkit</a> suite, a collection of tools that interface with <em>portable encapsulated projects</em>, or PEPs. <a href="http://pep.databio.org/en/latest/">PEP format</a> defines a structure for organizing project metadata using a <code>yaml</code> file. <code>pepr</code> allows you to read any PEP-formatted project metadata (and potentially even actual sample data) into R, providing you a convenient user interface to interact with and share project metadata.</p>
+<p><code>pepr</code> is the official R package for the <a href="https://pep.databio.org/en/2.0.0/">pepkit</a> suite, a collection of tools that interface with <em>portable encapsulated projects</em>, or PEPs. <a href="https://pep.databio.org/en/2.0.0/">PEP format</a> defines a structure for organizing project metadata using a <code>yaml</code> file. <code>pepr</code> allows you to read any PEP-formatted project metadata (and potentially even actual sample data) into R, providing you a convenient user interface to interact with and share project metadata.</p>
 <div id="installing-pepr" class="section level2">
 <h2>Installing <code>pepr</code></h2>
 <p>You can install <code>pepr</code> in the usual way. Currently from GitHub (but we target a CRAN release at some point).</p>
-<pre><code>devtools::install_github('pepkit/pepr')</code></pre>
+<pre><code>devtools::install_github(&#39;pepkit/pepr&#39;)</code></pre>
 </div>
 <div id="loading-an-example-project" class="section level2">
 <h2>Loading an example project</h2>
 <p>Load <code>pepr</code> and read in your project. We have provided a basic example to show you how it works. You can use this to get the file path to a built-in example project configuration <code>yaml</code> file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(<span class="st">'pepr'</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">branch =<span class="st"> &quot;master&quot;</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">projectConfigFile =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="st">&quot;example_basic&quot;</span>,</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">package=</span><span class="st">&quot;pepr&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(<span class="st">&#39;pepr&#39;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>branch =<span class="st"> &quot;master&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>projectConfigFile =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="st">&quot;example_basic&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="dt">package=</span><span class="st">&quot;pepr&quot;</span>)</span></code></pre></div>
 <p>Loading your project metadata into R is a single line of code:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">p =<span class="st"> </span>pepr<span class="op">::</span><span class="kw">Project</span>(<span class="dt">file=</span>projectConfigFile)</a></code></pre></div>
-<pre><code>## Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_basic/project_config.yaml</code></pre>
-<pre><code>## Warning in readLines(con): incomplete final line found on '/private/var/folders/
-## 3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/
-## example_peps-master/example_basic/project_config.yaml'</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>p =<span class="st"> </span>pepr<span class="op">::</span><span class="kw">Project</span>(<span class="dt">file=</span>projectConfigFile)</span></code></pre></div>
+<pre><code>## Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_basic/project_config.yaml</code></pre>
+<pre><code>## Warning in readLines(con): incomplete final line found on &#39;/private/var/folders/
+## 3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/
+## example_peps-master/example_basic/project_config.yaml&#39;</code></pre>
 <p>That’s it! You’ve now have a <code>Project</code> object, <em>p</em>, to interact with in <code>R</code>.</p>
 </div>
 <div id="interfacing-with-your-peprproject-object-in-r" class="section level2">
 <h2>Interfacing with your <code>pepr::Project</code> object in R</h2>
 <p>Now you can interface with that project object to grab both sample-level and project-level metadata. Here’s how you can access the metadata. If you just run the <code>show()</code> function on your object, you’ll get a simple report telling you a few basic stats, like where the project came from and how many samples it has:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">p</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>p</span></code></pre></div>
 <pre><code>## PEP project object. Class:  Project
 ##   file:  
-## /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_basic/project_config.yaml
+## /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_basic/project_config.yaml
 ##   samples:  2</code></pre>
 <p>To get the sample table out of the project, you use the <code>samples()</code> function:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">sampleTable</span>(p)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">##    sample_name      protocol                file</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">## 1:      frog_1 anySampleType data/frog1_data.txt</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">## 2:      frog_2 anySampleType data/frog2_data.txt</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">sampleTable</span>(p)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">##    sample_name      protocol                file</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## 1:      frog_1 anySampleType data/frog1_data.txt</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">## 2:      frog_2 anySampleType data/frog2_data.txt</span></span></code></pre></div>
 <p>And you can also access the project configuration metadata with the <code>config()</code> function:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">config</span>(p)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">config</span>(p)</span></code></pre></div>
 <pre><code>## Config object. Class: Config
 ##  pep_version: 2.0.0
 ##  sample_table: 
-## /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_basic/sample_table.csv
+## /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_basic/sample_table.csv
 ##  name: example_basic</code></pre>
 <p>Follow the other vignettes for more advanced capabilities of <code>pepr</code>.</p>
 </div>

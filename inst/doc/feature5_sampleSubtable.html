@@ -12,7 +12,7 @@
 
 <meta name="author" content="Michal Stolarczyk &amp; Nathan Sheffield" />
 
-<meta name="date" content="2020-06-03" />
+<meta name="date" content="2020-10-15" />
 
 <title>Subsample table in pepr</title>
 
@@ -20,9 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,14 +32,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -48,9 +50,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -301,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Subsample table in pepr</h1>
 <h4 class="author">Michal Stolarczyk &amp; Nathan Sheffield</h4>
-<h4 class="date">2020-06-03</h4>
+<h4 class="date">2020-10-15</h4>
 
 
 
@@ -328,7 +330,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>   pep_version: 2.0.0
    sample_table: sample_table.csv
    subsample_table: subsample_table.csv
-   output_dir: $HOME/example_results</code></pre>
+   looper:
+      output_dir: $HOME/example_results</code></pre>
 <ul>
 <li>Sample table:
 <table>
@@ -456,36 +459,36 @@ data/frog2b_data.txt
 </table></li>
 </ul>
 <p>Let’s create the Project object and see if multiple files are present</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">projectConfig1 =<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">&quot;example_subtable1&quot;</span>,</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">p1 =<span class="st"> </span><span class="kw">Project</span>(projectConfig1)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable1/project_config.yaml</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># Check the files</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">p1Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p1)</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">p1Samples<span class="op">$</span>file</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; [1] &quot;data/frog1a_data.txt&quot; &quot;data/frog1b_data.txt&quot; &quot;data/frog1c_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; [1] &quot;data/frog2a_data.txt&quot; &quot;data/frog2b_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; [1] &quot;multi&quot;</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co"># Check the subsample names</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22">p1Samples<span class="op">$</span>subsample_name</a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot; &quot;sub_c&quot;</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot;</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt; NULL</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>projectConfig1 =<span class="st"> </span><span class="kw">system.file</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">&quot;example_subtable1&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>p1 =<span class="st"> </span><span class="kw">Project</span>(projectConfig1)</span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_subtable1/project_config.yaml</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># Check the files</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>p1Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p1)</span>
+<span id="cb2-12"><a href="#cb2-12"></a>p1Samples<span class="op">$</span>file</span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#&gt; [1] &quot;data/frog1a_data.txt&quot; &quot;data/frog1b_data.txt&quot; &quot;data/frog1c_data.txt&quot;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">#&gt; </span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; [1] &quot;data/frog2a_data.txt&quot; &quot;data/frog2b_data.txt&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; </span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">#&gt; [1] &quot;multi&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># Check the subsample names</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>p1Samples<span class="op">$</span>subsample_name</span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot; &quot;sub_c&quot;</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co">#&gt; </span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co">#&gt; [1] &quot;sub_a&quot; &quot;sub_b&quot;</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co">#&gt; </span></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>And inspect the whole table in <code>p1@samples</code> slot</p>
 <table>
 <thead>
@@ -518,11 +521,11 @@ data/frog2b_data.txt
 </tbody>
 </table>
 <p>You can also access a single subsample if you call the <code>getSubsample</code> method with appropriate <code>sample_name</code> - <code>subsample_name</code> attribute combination. Note, that this is only possible if the <code>subsample_name</code> column is defined in the <code>sub_annotation.csv</code> file.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">sampleName =<span class="st"> &quot;frog_1&quot;</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">subsampleName =<span class="st"> &quot;sub_a&quot;</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">getSubsample</span>(p1, sampleName, subsampleName)</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;    sample_name      protocol                 file subsample_name</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 1:      frog_1 anySampleType data/frog1a_data.txt          sub_a</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sampleName =<span class="st"> &quot;frog_1&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>subsampleName =<span class="st"> &quot;sub_a&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">getSubsample</span>(p1, sampleName, subsampleName)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt;    sample_name      protocol                 file subsample_name</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; 1:      frog_1 anySampleType data/frog1a_data.txt          sub_a</span></span></code></pre></div>
 </div>
 <div id="example-2-subannotations-and-derived-attributes" class="section level3">
 <h3>Example 2: subannotations and derived attributes</h3>
@@ -531,14 +534,15 @@ data/frog2b_data.txt
 <ul>
 <li>Project config file:</li>
 </ul>
-<pre><code>  Warning in readLines(file): incomplete final line found on '/private/var/
-  folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/
-  extdata/example_peps-master/example_subtable2/project_config.yaml'
+<pre><code>  Warning in readLines(file): incomplete final line found on &#39;/private/var/
+  folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/
+  extdata/example_peps-master/example_subtable2/project_config.yaml&#39;
    pep_version: 2.0.0
    sample_table: sample_table.csv
    subsample_table: subsample_table.csv
-   output_dir: $HOME/hello_looper_results
-   pipeline_interfaces: ../pipeline/pipeline_interface.yaml
+   looper:
+      output_dir: $HOME/hello_looper_results
+      pipeline_interfaces: ../pipeline/pipeline_interface.yaml
    sample_modifiers:
       derive:
           attributes: file
@@ -549,9 +553,9 @@ data/frog2b_data.txt
 <li>Sample annotation table:</li>
 </ul>
 <pre><code>#&gt; Warning in read.table(sampleAnnotation, sep = &quot;,&quot;, header = T): incomplete
-#&gt; final line found by readTableHeader on '/private/var/folders/3f/
-#&gt; 0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/
-#&gt; example_peps-master/example_subtable2/sample_table.csv'</code></pre>
+#&gt; final line found by readTableHeader on &#39;/private/var/folders/3f/
+#&gt; 0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/
+#&gt; example_peps-master/example_subtable2/sample_table.csv&#39;</code></pre>
 <table>
 <thead>
 <tr>
@@ -704,36 +708,36 @@ b
 </table>
 Let’s load the project config, create the Project object and see if multiple files are present</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">projectConfig2 =<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">&quot;example_subtable2&quot;</span>,</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">p2 =<span class="st"> </span><span class="kw">Project</span>(projectConfig2)</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable2/project_config.yaml</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; Warning in readLines(con): incomplete final line found on '/private/var/folders/</span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; 3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; example_peps-master/example_subtable2/project_config.yaml'</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; replace 1 rows</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 2 rows to</span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; replace 1 rows</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co"># Check the files</span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18">p2Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p2)</a>
-<a class="sourceLine" id="cb6-19" data-line-number="19">p2Samples<span class="op">$</span>file</a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; [1] &quot;../data/frog2a_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co">#&gt; [1] &quot;../data/frog3_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt; [[4]]</span></a>
-<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; [1] &quot;../data/frog4_data.txt&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>projectConfig2 =<span class="st"> </span><span class="kw">system.file</span>(</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st">&quot;example_subtable2&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>p2 =<span class="st"> </span><span class="kw">Project</span>(projectConfig2)</span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_subtable2/project_config.yaml</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; Warning in readLines(con): incomplete final line found on &#39;/private/var/folders/</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt; 3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt; example_peps-master/example_subtable2/project_config.yaml&#39;</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt; replace 1 rows</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 2 rows to</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt; replace 1 rows</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co"># Check the files</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>p2Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p2)</span>
+<span id="cb6-19"><a href="#cb6-19"></a>p2Samples<span class="op">$</span>file</span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; </span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co">#&gt; [1] &quot;../data/frog2a_data.txt&quot;</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="co">#&gt; </span></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="co">#&gt; [1] &quot;../data/frog3_data.txt&quot;</span></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="co">#&gt; </span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="co">#&gt; [1] &quot;../data/frog4_data.txt&quot;</span></span></code></pre></div>
 <p>And inspect the whole table in <code>p2@samples</code> slot</p>
 <table>
 <thead>
@@ -792,8 +796,9 @@ Let’s load the project config, create the Project object and see if multiple f
 <pre><code>   pep_version: 2.0.0
    sample_table: sample_table.csv
    subsample_table: subsample_table.csv
-   output_dir: $HOME/hello_looper_results
-   pipeline_interfaces: ../pipeline/pipeline_interface.yaml
+   looper:
+      output_dir: $HOME/hello_looper_results
+      pipeline_interfaces: ../pipeline/pipeline_interface.yaml
    sample_modifiers:
       derive:
           attributes: file
@@ -934,31 +939,31 @@ c
 </table>
 Let’s load the project config, create the Project object and see if multiple files are present</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">projectConfig3 =<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">&quot;example_subtable3&quot;</span>,</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">p3 =<span class="st"> </span><span class="kw">Project</span>(projectConfig3)</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable3/project_config.yaml</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; replace 1 rows</span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># Check the files</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13">p3Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p3)</a>
-<a class="sourceLine" id="cb8-14" data-line-number="14">p3Samples<span class="op">$</span>file</a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; [1] &quot;../data/frog2*_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">#&gt; [1] &quot;../data/frog3*_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="co">#&gt; [[4]]</span></a>
-<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">#&gt; [1] &quot;../data/frog4*_data.txt&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>projectConfig3 =<span class="st"> </span><span class="kw">system.file</span>(</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">&quot;example_subtable3&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>p3 =<span class="st"> </span><span class="kw">Project</span>(projectConfig3)</span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_subtable3/project_config.yaml</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; Warning in `[&lt;-.data.frame`(x, i, j, value): replacement element 1 has 3 rows to</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; replace 1 rows</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co"># Check the files</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>p3Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p3)</span>
+<span id="cb8-14"><a href="#cb8-14"></a>p3Samples<span class="op">$</span>file</span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; [1] &quot;../data/frog1a_data.txt&quot;</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; </span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt; [1] &quot;../data/frog2*_data.txt&quot;</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#&gt; </span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#&gt; [1] &quot;../data/frog3*_data.txt&quot;</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#&gt; </span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#&gt; [1] &quot;../data/frog4*_data.txt&quot;</span></span></code></pre></div>
 <p>And inspect the whole table in <code>p3@samples</code> slot</p>
 <table>
 <thead>
@@ -1012,8 +1017,9 @@ Let’s load the project config, create the Project object and see if multiple f
 <pre><code>   pep_version: 2.0.0
    sample_table: sample_table.csv
    subsample_table: subsample_table.csv
-   output_dir: $HOME/hello_looper_results
-   pipeline_interfaces: ../pipeline/pipeline_interface.yaml</code></pre>
+   looper:
+      output_dir: $HOME/hello_looper_results
+      pipeline_interfaces: ../pipeline/pipeline_interface.yaml</code></pre>
 <ul>
 <li>Sample annotation table:
 <table>
@@ -1115,41 +1121,41 @@ frog1b_data2.txt
 </table>
 Let’s load the project config, create the Project object and see if multiple files are present</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">projectConfig4 =<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">&quot;extdata&quot;</span>,</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">&quot;example_subtable4&quot;</span>,</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">&quot;project_config.yaml&quot;</span>,</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">p4 =<span class="st"> </span><span class="kw">Project</span>(projectConfig4)</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpF0yVmb/Rinstbd5d643c109c/pepr/extdata/example_peps-master/example_subtable4/project_config.yaml</span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co"># Check the read1 and read2 columns</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">p4Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p4)</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12">p4Samples<span class="op">$</span>read1</a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; [1] &quot;frog1a_data.txt&quot; &quot;frog1b_data.txt&quot; &quot;frog1c_data.txt&quot;</span></a>
-<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">#&gt; [[4]]</span></a>
-<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb10-24" data-line-number="24">p4Samples<span class="op">$</span>read2</a>
-<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="co">#&gt; [[1]]</span></a>
-<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="co">#&gt; [1] &quot;frog1a_data2.txt&quot; &quot;frog1b_data2.txt&quot; &quot;frog1b_data2.txt&quot;</span></a>
-<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="co">#&gt; [[2]]</span></a>
-<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt; [[3]]</span></a>
-<a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb10-33" data-line-number="33"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt; [[4]]</span></a>
-<a class="sourceLine" id="cb10-35" data-line-number="35"><span class="co">#&gt; NULL</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>projectConfig4 =<span class="st"> </span><span class="kw">system.file</span>(</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">&quot;extdata&quot;</span>,</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">paste0</span>(<span class="st">&quot;example_peps-&quot;</span>, branch),</span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">&quot;example_subtable4&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">&quot;project_config.yaml&quot;</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="dt">package =</span> <span class="st">&quot;pepr&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8"></a>p4 =<span class="st"> </span><span class="kw">Project</span>(projectConfig4)</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt; Loading config file: /private/var/folders/3f/0wj7rs2144l9zsgxd3jn5nxc0000gn/T/RtmpSzdJbG/Rinst4b945a77f0f4/pepr/extdata/example_peps-master/example_subtable4/project_config.yaml</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co"># Check the read1 and read2 columns</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a>p4Samples =<span class="st"> </span><span class="kw">sampleTable</span>(p4)</span>
+<span id="cb10-12"><a href="#cb10-12"></a>p4Samples<span class="op">$</span>read1</span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co">#&gt; [1] &quot;frog1a_data.txt&quot; &quot;frog1b_data.txt&quot; &quot;frog1c_data.txt&quot;</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt; </span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt; </span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co">#&gt; </span></span>
+<span id="cb10-22"><a href="#cb10-22"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb10-23"><a href="#cb10-23"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-24"><a href="#cb10-24"></a>p4Samples<span class="op">$</span>read2</span>
+<span id="cb10-25"><a href="#cb10-25"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb10-26"><a href="#cb10-26"></a><span class="co">#&gt; [1] &quot;frog1a_data2.txt&quot; &quot;frog1b_data2.txt&quot; &quot;frog1b_data2.txt&quot;</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a><span class="co">#&gt; </span></span>
+<span id="cb10-28"><a href="#cb10-28"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb10-29"><a href="#cb10-29"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-30"><a href="#cb10-30"></a><span class="co">#&gt; </span></span>
+<span id="cb10-31"><a href="#cb10-31"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb10-32"><a href="#cb10-32"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-33"><a href="#cb10-33"></a><span class="co">#&gt; </span></span>
+<span id="cb10-34"><a href="#cb10-34"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb10-35"><a href="#cb10-35"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>And inspect the whole table in <code>p4@samples</code> slot</p>
 <table>
 <thead>
