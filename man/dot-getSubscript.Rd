@@ -7,7 +7,7 @@
 .getSubscript(lst, i)
 }
 \arguments{
-\item{lst}{list to search subsript for}
+\item{lst}{list to search subscript for}
 
 \item{i}{character or numeric to determine final list index}
 }
@@ -15,10 +15,11 @@
 numeric index of the requested element in the list
 }
 \description{
-Based on available list element names and subscript value determine 
+Based on available list element names and subscript value determine
 index of the element requested
 }
 \examples{
 l = list(a="a", b="b")
 .getSubscript(l, 1) == .getSubscript(l, "a")
 }
+\keyword{internal}

@@ -13,6 +13,9 @@
 
 \item{parent}{a directory that will be used to make the path absolute}
 }
+\value{
+Formatted string
+}
 \description{
 Given a string with environment variables (encoded like \code{${VAR}} or \code{$VAR}), and
 other variables (encoded like \code{{VAR}}) this function will substitute
@@ -24,3 +27,4 @@ Additionally, if the string is a non-absolute path, it will be expanded.
 .strformat("~/{VAR1}{VAR2}_file", list(VAR1="hi", VAR2="hello"))
 .strformat("$HOME/{VAR1}{VAR2}_file", list(VAR1="hi", VAR2="hello"))
 }
+\keyword{internal}

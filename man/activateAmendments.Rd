@@ -14,6 +14,9 @@ activateAmendments(.Object, amendments)
 
 \item{amendments}{character with the amendment name}
 }
+\value{
+an object of class \code{"\linkS4class{Project}"} with activated amendments
+}
 \description{
 This method switches between the amendments
 within the \code{"\linkS4class{Project}"} object
@@ -25,9 +28,9 @@ of \code{"\linkS4class{Project}"} class
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{.Object = Project,amendments = character}: activate amendments in a \code{"\linkS4class{Project}"} object
-}}
+\item \code{activateAmendments(.Object = Project, amendments = character)}: activate amendments in a \code{"\linkS4class{Project}"} object
 
+}}
 \examples{
 projectConfig = system.file("extdata",
 "example_peps-master",
@@ -36,5 +39,5 @@ projectConfig = system.file("extdata",
 package = "pepr")
 p = Project(file = projectConfig)
 availAmendments = listAmendments(p)
-activateAmendments(p,availAmendments[1])
+activateAmendments(p, availAmendments[1])
 }

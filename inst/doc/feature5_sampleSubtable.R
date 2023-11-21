@@ -4,7 +4,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 branch = "master"
 library(pepr)
 projectConfig = system.file(
@@ -62,7 +62,7 @@ sampleName = "frog_1"
 subsampleName = "sub_a"
 getSubsample(p1, sampleName, subsampleName)
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 projectConfig = system.file(
 "extdata",
 paste0("example_peps-", branch),
@@ -110,7 +110,7 @@ p2Samples$file
 ## ----echo=FALSE---------------------------------------------------------------
 kable(p2Samples)
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 projectConfig = system.file(
 "extdata",
 paste0("example_peps-", branch),
@@ -158,7 +158,7 @@ p3Samples$file
 ## ----echo=FALSE---------------------------------------------------------------
 kable(p3Samples)
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 project_config = system.file(
 "extdata",
 paste0("example_peps-", branch),

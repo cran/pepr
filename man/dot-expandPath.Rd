@@ -13,8 +13,8 @@
 Expanded path or untouched string
 }
 \description{
-This function expands system paths (the non-absolute paths become absolute) 
-and replaces the environment variables (e.g, \code{${HOME}}) 
+This function expands system paths (the non-absolute paths become absolute)
+and replaces the environment variables (e.g, \code{${HOME}})
 with their values.
 }
 \details{
@@ -27,3 +27,4 @@ string = "https://www.r-project.org/"
 path = "$HOME/my/path/string.txt"
 .expandPath(path)
 }
+\keyword{internal}

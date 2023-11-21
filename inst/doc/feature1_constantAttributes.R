@@ -4,9 +4,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ----echo=FALSE,warning=FALSE-------------------------------------------------
+## ----echo=FALSE,warning=FALSE,message=FALSE-----------------------------------
 branch = "master"
 library(knitr)
+library(pepr)
 sampleAnnotation = system.file(
 "extdata",
 paste0("example_peps-", branch),
@@ -17,8 +18,7 @@ package = "pepr"
 sampleAnnotationDF = read.table(sampleAnnotation, sep = ",", header = T)
 knitr::kable(sampleAnnotationDF, format = "html") 
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
-library(pepr)
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 projectConfig = system.file(
 "extdata",
 paste0("example_peps-", branch),
@@ -40,13 +40,12 @@ sampleAnnotation = system.file(
   kable(sampleAnnotationDF, format = "html") 
 
 ## -----------------------------------------------------------------------------
-library(pepr)
 projectConfig = system.file(
-"extdata",
-paste0("example_peps-", branch),
-"example_append",
-"project_config.yaml",
-package = "pepr"
+  "extdata",
+  paste0("example_peps-", branch), 
+  "example_append", 
+  "project_config.yaml", 
+  package = "pepr"
 )
 p = Project(projectConfig)
 

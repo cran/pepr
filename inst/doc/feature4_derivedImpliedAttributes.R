@@ -11,7 +11,7 @@ package = "pepr"
 sampleAnnotationDF = read.table(sampleAnnotation, sep = ",", header = T)
 knitr::kable(sampleAnnotationDF, format = "html") 
 
-## ---- echo=FALSE,message=TRUE,collapse=TRUE,comment=" "-----------------------
+## ----echo=FALSE,message=TRUE,collapse=TRUE,comment=" "------------------------
 library(pepr)
 projectConfig = system.file(
 "extdata",
